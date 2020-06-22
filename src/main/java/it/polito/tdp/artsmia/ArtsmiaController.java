@@ -3,6 +3,10 @@ package it.polito.tdp.artsmia;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.jgrapht.graph.DefaultWeightedEdge;
+
+import it.polito.tdp.artsmia.model.Artist;
+import it.polito.tdp.artsmia.model.Coppia;
 import it.polito.tdp.artsmia.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,7 +35,7 @@ public class ArtsmiaController {
     private Button btnCalcolaPercorso;
 
     @FXML
-    private ComboBox<?> boxRuolo;
+    private ComboBox<String> boxRuolo;
 
     @FXML
     private TextField txtArtista;
@@ -42,23 +46,50 @@ public class ArtsmiaController {
     @FXML
     void doArtistiConnessi(ActionEvent event) {
     	txtResult.clear();
-    	txtResult.appendText("Calcola artisti connessi");
+    	if(model.getGrafo()==null)
+    		txtResult.setText("Crea un grafo");
+    	else {
+    		if(model.getCoppieArchi().size()==0)
+    			txtResult.setText("Non sono presenti archi");
+    		else
+    			for(Coppia c : model.getCoppieArchi())
+    				txtResult.appendText(c.getA1() + " " + c.getA2() + " " + c.getPeso() + "\n");
+    	}
     }
 
     @FXML
     void doCalcolaPercorso(ActionEvent event) {
     	txtResult.clear();
-    	txtResult.appendText("Calcola percorso");
+    	String id = txtArtista.getText().trim();
+    	Artist source = null;
+    	for(Artist a : model.getGrafo().vertexSet()) 
+    		if(a.getId().toString().equals(id)) 
+    			source = a;
+    	if(source==null)
+    		txtResult.setText("Id non non presente");
+    	else if(model.percorso(source).size()==0)
+    		txtResult.setText("Vertice non connesso");
+    	else {
+    		for(Artist a : model.percorso(source))
+    			txtResult.appendText(a + "\n");
+    		txtResult.appendText("Il peso degli archi è " + model.getBestPeso());
+    	}
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-    	txtResult.clear();
-    	txtResult.appendText("Crea grafo");
+    	String role = boxRuolo.getValue();
+    	if(role!=null) {
+    		model.creaGrafo(role);
+    		txtResult.setText("GRAFO CREATO\n#VERTICI: " + model.getGrafo().vertexSet().size()
+    				+ " #ARCHI: " + model.getGrafo().edgeSet().size());
+    	} else 
+    		txtResult.setText("Seleziona un ruolo");	
     }
 
     public void setModel(Model model) {
     	this.model = model;
+    	boxRuolo.getItems().addAll(model.getRoles());
     }
 
     
