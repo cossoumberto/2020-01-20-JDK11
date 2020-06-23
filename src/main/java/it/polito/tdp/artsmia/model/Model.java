@@ -48,6 +48,7 @@ public class Model {
 		return listaCoppieArchi;
 	}
 	
+	// SOLUZIONE RICORSIVA PROPOSTA MOLTO PIU' SEMPLICE E LINEARE
 	public List<Artist> percorso(Artist source){
 		if(grafo.edgesOf(source).size()==0)
 			return null;
@@ -64,10 +65,7 @@ public class Model {
 		}
 	}
 	
-	public Integer getBestPeso() {
-		return this.bestNum;
-	}
-
+	// SOLUZIONE RICORSIVA PROPOSTA MOLTO PIU' SEMPLICE E LINEARE
 	private void cerca(List<Artist> parziale, int l, int pesoCorrente) {
 		List<DefaultWeightedEdge> percorribili = new ArrayList<>();
 		for(DefaultWeightedEdge e : grafo.edgesOf(parziale.get(parziale.size()-1)))
@@ -88,5 +86,9 @@ public class Model {
 				parziale.remove(a);
 			}
 		}
+	}
+	
+	public Integer getBestPeso() {
+		return this.bestNum;
 	}
 }

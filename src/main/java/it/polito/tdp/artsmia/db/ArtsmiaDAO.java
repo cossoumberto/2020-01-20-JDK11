@@ -115,9 +115,11 @@ public class ArtsmiaDAO {
 					//CORREZIONE
 					+ " COUNT(DISTINCT E1.exhibition_id) AS C " +
 					//CORREZIONE
-					"FROM authorship AS A1, authorship AS A2, exhibition_objects AS E1, exhibition_objects AS E2 " +
-					"WHERE E1.exhibition_id=E2.exhibition_id AND E1.object_id>E2.object_id AND E1.object_id=A1.object_id " +
-					"AND E2.object_id=A2.object_id AND A1.artist_id>A2.artist_id AND A1.role=? AND A2.role=? " +
+					"FROM artists AS A1, artists AS A2, " + //CORREZIONE --> AGGIUNTO artists AS A1, artists AS A2
+					"authorship AS AU1, authorship AS AU2, exhibition_objects AS E1, exhibition_objects AS E2 " +
+					"WHERE E1.exhibition_id=E2.exhibition_id AND E1.object_id=AU1.object_id " + //CORREZIONE --> RIMOSSA "AND E1.object_id>E2.object_id"
+					"AND E2.object_id=AU2.object_id AND A1.artist_id>A2.artist_id AND AU1.role=? AND AU2.role=? " +
+					"AND AU1.artist_id = A1.artist_id AND AU2.artist_id = A2.artist_id " + //CORREZIONE --> CONDIZIONI AGGIUNTE
 					"GROUP BY A1.artist_id, A2.artist_id";
 		List<Coppia> list = new ArrayList<>();
 		try {
