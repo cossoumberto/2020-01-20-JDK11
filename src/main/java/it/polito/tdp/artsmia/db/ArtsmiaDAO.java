@@ -111,7 +111,10 @@ public class ArtsmiaDAO {
 	}
 	
 	public List<Coppia> getCoppieArtist(String role, Map<Integer, Artist> idMapArtists){
-		String sql = "SELECT A1.artist_id AS ART1 , A2.artist_id AS ART2, COUNT(*) AS C " +
+		String sql = "SELECT A1.artist_id AS ART1 , A2.artist_id AS ART2," // COUNT(*) AS C " + //SBAGLIATO!!! --> COUNT(DISTINCT E1.exhibition_id))
+					//CORREZIONE
+					+ " COUNT(DISTINCT E1.exhibition_id) AS C " +
+					//CORREZIONE
 					"FROM authorship AS A1, authorship AS A2, exhibition_objects AS E1, exhibition_objects AS E2 " +
 					"WHERE E1.exhibition_id=E2.exhibition_id AND E1.object_id>E2.object_id AND E1.object_id=A1.object_id " +
 					"AND E2.object_id=A2.object_id AND A1.artist_id>A2.artist_id AND A1.role=? AND A2.role=? " +
